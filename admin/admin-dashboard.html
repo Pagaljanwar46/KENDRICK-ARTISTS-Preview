@@ -1,0 +1,565 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Artist Management</title>
+<style>
+    /* Modern Reset & Base Styles */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { 
+        font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+        background-color: #f9fafb; 
+        color: #1e1e2f; 
+        line-height: 1.6;
+        padding: 0;
+    }
+
+    /* Layout Container */
+    .container {
+        max-width: 1100px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    /* Header Section */
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #4f46e5;
+    }
+    
+    .header h1 { 
+        color: #1e1e2f; 
+        font-size: 26px; 
+        font-weight: 600; 
+    }
+
+    .btn-logout { 
+        background: #9ca3af; 
+        color: white; 
+        font-size: 13px;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .btn-logout:hover { opacity: 0.9; }
+
+    /* Form Card Styling */
+    .card {
+        background: #ffffff;
+        padding: 30px 25px;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        margin-bottom: 40px;
+    }
+
+    .card h2 { 
+        margin-bottom: 25px; 
+        font-size: 20px; 
+        color: #374151; 
+        text-transform: uppercase; 
+        letter-spacing: 1px; 
+    }
+
+    /* Form Grid */
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+    }
+
+    input, textarea, select {
+        width: 100%;
+        padding: 14px;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        font-size: 15px;
+        outline: none;
+        transition: all 0.2s ease;
+        background-color: #fefefe;
+    }
+
+    input:focus, textarea:focus, select:focus { 
+        border-color: #4f46e5; 
+        box-shadow: 0 0 0 2px rgba(79,70,229,0.1);
+    }
+
+    textarea { grid-column: span 2; height: 100px; resize: vertical; }
+
+    .checkbox-group {
+        grid-column: span 2;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 5px 0;
+    }
+
+    .checkbox-group input { width: auto; margin: 0; }
+
+    /* Buttons */
+    button {
+        cursor: pointer;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+
+    #saveBtn {
+        background-color: #4f46e5;
+        color: white;
+        width: 100%;
+        font-size: 16px;
+        margin-top: 12px;
+    }
+
+    #saveBtn:hover { 
+        background-color: #4338ca; 
+        transform: translateY(-2px); 
+    }
+
+    /* Artist List Styling */
+    .artist-item {
+        background: #ffffff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px 22px;
+        margin-bottom: 14px;
+        border-radius: 10px;
+        border-left: 5px solid #4f46e5;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+
+    .artist-info { flex-grow: 1; }
+    .artist-info strong { font-size: 1.1em; color: #1e1e2f; }
+
+    .status-badge {
+        font-size: 12px;
+        padding: 4px 12px;
+        border-radius: 20px;
+        margin-left: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .active-bg { background: #d1fae5; color: #047857; }
+    .inactive-bg { background: #fee2e2; color: #b91c1c; }
+
+    /* Action Buttons */
+    .actions { display: flex; gap: 10px; }
+    .btn-edit { background: #4f46e5; color: white; }
+    .btn-delete { background: #ef4444; color: white; }
+    .btn-toggle { background: #f59e0b; color: white; }
+
+    button:hover { opacity: 0.95; transform: translateY(-1px); }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .form-grid { grid-template-columns: 1fr; }
+        textarea { grid-column: span 1; }
+        .artist-item { flex-direction: column; align-items: flex-start; }
+        .actions { margin-top: 15px; width: 100%; justify-content: flex-start; }
+    }
+
+    /* Search & Sort Controls */
+    #searchInput, #sortSelect {
+        padding: 10px 14px;
+        border-radius: 6px;
+        border: 1px solid #e5e7eb;
+        font-size: 14px;
+    }
+</style>
+
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+        <h1>Admin Dashboard</h1>
+        <button class="btn-logout" id="logoutBtn">Logout</button>
+    </div>
+
+    <div class="card">
+        <h2>Add / Edit Artist</h2>
+        <div class="form-grid">
+            <input id="name" placeholder="Artist Name">
+            <input id="slug" placeholder="URL Slug (e.g. kendrick-lamar)">
+            <input id="category" placeholder="Category (e.g. West Coast)">
+           
+           <select id="section">
+  <option value="">Select Section</option>
+  <option value="personal">Personal Appearance</option>
+  <option value="comedy">Comedy</option>
+  <option value="music">Music</option>
+  <option value="both">Comedy + Personal</option>
+</select>
+
+
+
+            <input id="imageUrl" placeholder="Image URL">
+            <textarea id="bio" placeholder="Artist Biography"></textarea>
+            <input id="videoUrl" placeholder="Video URL (YouTube Embed)">
+<input id="galleryImage1" placeholder="Gallery Image 1 URL (optional)">
+<input id="galleryImage2" placeholder="Gallery Image 2 URL (optional)">
+
+<textarea id="bioAfterVideo" placeholder="Text after video"></textarea>
+
+<textarea id="bioAfterImage1" placeholder="Text after first image"></textarea>
+
+<textarea id="bioAfterImage2" placeholder="Text after second image"></textarea>
+
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="active">
+                <label for="active">Set as Active (Visible on site)</label>
+            </div>
+        </div>
+        <button id="saveBtn">Save Artist</button>
+    </div>
+
+    <h2>Artists List</h2>
+
+<!-- Search & Sort Controls -->
+<div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:15px;">
+  <input type="text" id="searchInput" placeholder="Search by name or category..." style="flex:1; padding:8px; border-radius:4px; border:1px solid #ddd;">
+  
+  <select id="sortSelect" style="padding:8px; border-radius:4px; border:1px solid #ddd;">
+    <option value="">Sort by</option>
+    <option value="date-desc">Newest First</option>
+    <option value="date-asc">Oldest First</option>
+    <option value="name-asc">A → Z</option>
+    <option value="name-desc">Z → A</option>
+  </select>
+</div>
+
+<h3 style="margin-top:30px;">Personal Appearance</h3>
+<div id="personalArtists"></div>
+
+<h3 style="margin-top:40px;">Comedy</h3>
+<div id="comedyArtists"></div>
+
+<h3 style="margin-top:40px;">Music</h3>
+<div id="musicArtists"></div>
+
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
+    import { 
+      getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, getDoc, serverTimestamp 
+    } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAGbc3hE5qsN8axCsRNaNH4CNSDp3Yave8",
+      authDomain: "kendrick-artists-clarck.firebaseapp.com",
+      projectId: "kendrick-artists-clarck",
+      storageBucket: "kendrick-artists-clarck.firebasestorage.app",
+      messagingSenderId: "695415417830",
+      appId: "1:695415417830:web:f5d196cdf9334f80220427"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+    const db = getFirestore();
+
+    // Protect admin page
+    onAuthStateChanged(auth, (user) => {
+      if (!user) window.location.href = "admin-login.html";
+    });
+
+    // Logout Functionality
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+        signOut(auth).then(() => window.location.href = "admin-login.html");
+    });
+
+    const saveBtn = document.getElementById("saveBtn");
+    let currentEditId = null;
+
+    async function loadArtists() {
+  const personalContainer = document.getElementById("personalArtists");
+  const comedyContainer = document.getElementById("comedyArtists");
+  const musicContainer = document.getElementById("musicArtists");
+
+
+  const searchInput = document.getElementById("searchInput").value.toLowerCase();
+  const sortValue = document.getElementById("sortSelect").value;
+
+  personalContainer.innerHTML = "<p>Loading...</p>";
+  comedyContainer.innerHTML = "<p>Loading...</p>";
+ musicContainer.innerHTML = "<p>Loading...</p>";
+
+  try {
+    const snapshot = await getDocs(collection(db, "artists"));
+    let artistsArray = [];
+
+    snapshot.forEach(docSnap => {
+      artistsArray.push({ id: docSnap.id, ...docSnap.data() });
+    });
+
+    // --- SEARCH ---
+    if (searchInput) {
+      artistsArray = artistsArray.filter(artist =>
+        artist.name.toLowerCase().includes(searchInput) ||
+        (artist.category && artist.category.toLowerCase().includes(searchInput))
+      );
+    }
+
+    // --- SORT ---
+    if (sortValue) {
+     if (sortValue === "date-desc") {
+  artistsArray.sort((a, b) => {
+    const aTime = a.updatedAt?.seconds || 0;
+    const bTime = b.updatedAt?.seconds || 0;
+    return bTime - aTime;
+  });
+}
+else if (sortValue === "date-asc") {
+  artistsArray.sort((a, b) => {
+    const aTime = a.updatedAt?.seconds || 0;
+    const bTime = b.updatedAt?.seconds || 0;
+    return aTime - bTime;
+  });
+}
+else if (sortValue === "name-asc") {
+  artistsArray.sort((a, b) => a.name.localeCompare(b.name));
+}
+else if (sortValue === "name-desc") {
+  artistsArray.sort((a, b) => b.name.localeCompare(a.name));
+}
+
+    }
+
+    personalContainer.innerHTML = "";
+    comedyContainer.innerHTML = "";
+    musicContainer.innerHTML = "";
+
+    let personalCount = 0;
+    let comedyCount = 0;
+    let musicCount = 0;
+
+    artistsArray.forEach(artist => {
+      const div = document.createElement("div");
+      div.className = "artist-item";
+      div.innerHTML = `
+        <div class="artist-info">
+          <strong>${artist.name}</strong>
+          <span class="status-badge ${artist.active ? 'active-bg' : 'inactive-bg'}">
+            ${artist.active ? "Active" : "Inactive"}
+          </span>
+          <div style="font-size:12px;color:#888;">/${artist.slug}</div>
+        </div>
+        <div class="actions">
+          <button class="btn-edit" onclick="editArtist('${artist.id}')">Edit</button>
+          <button class="btn-toggle" onclick="toggleActive('${artist.id}')">
+            ${artist.active ? "Deactivate" : "Activate"}
+          </button>
+          <button class="btn-delete" onclick="deleteArtist('${artist.id}')">Delete</button>
+        </div>
+      `;
+
+      // PERSONAL APPEARANCE
+      if (artist.section === "personal" || artist.section === "both") {
+        personalContainer.appendChild(div.cloneNode(true));
+        personalCount++;
+      }
+
+      // COMEDY
+      if (artist.section === "comedy" || artist.section === "both") {
+        comedyContainer.appendChild(div.cloneNode(true));
+        comedyCount++;
+      }
+
+      // MUSIC
+if (artist.section === "music") {
+  musicContainer.appendChild(div.cloneNode(true));
+  musicCount++;
+}
+
+    });
+
+    if (personalCount === 0) {
+      personalContainer.innerHTML = "<p>No Personal Appearance artists.</p>";
+    }
+
+    if (comedyCount === 0) {
+      comedyContainer.innerHTML = "<p>No Comedy artists.</p>";
+    }
+
+    if (musicCount === 0) {
+  musicContainer.innerHTML = "<p>No Music artists.</p>";
+}
+
+
+  } catch (err) {
+    personalContainer.innerHTML = "Error loading artists";
+    comedyContainer.innerHTML = "Error loading artists";
+  }
+}
+
+// Update list when typing in search box
+document.getElementById("searchInput").addEventListener("input", loadArtists);
+
+// Update list when changing sort option
+document.getElementById("sortSelect").addEventListener("change", loadArtists);
+
+
+
+    // Add or Update Artist
+    saveBtn.addEventListener("click", async () => {
+      const name = document.getElementById("name").value.trim();
+      const slug = document.getElementById("slug").value.trim();
+      const bio = document.getElementById("bio").value.trim();
+      const imageUrl = document.getElementById("imageUrl").value.trim();
+      const category = document.getElementById("category").value.trim();
+      const active = document.getElementById("active").checked;
+      const section = document.getElementById("section").value;
+      const videoUrl = document.getElementById("videoUrl").value.trim();
+const galleryImage1 = document.getElementById("galleryImage1").value.trim();
+const galleryImage2 = document.getElementById("galleryImage2").value.trim();
+
+const galleryImages = [];
+if (galleryImage1) galleryImages.push(galleryImage1);
+if (galleryImage2) galleryImages.push(galleryImage2);
+
+const bioAfterVideo = document.getElementById("bioAfterVideo").value.trim();
+const bioAfterImage1 = document.getElementById("bioAfterImage1").value.trim();
+const bioAfterImage2 = document.getElementById("bioAfterImage2").value.trim();
+
+
+
+
+      if (!section) {
+  alert("Please select a section.");
+  return;
+}
+
+
+      saveBtn.disabled = true;
+      saveBtn.textContent = "Processing...";
+
+      try {
+        if (currentEditId) {
+          const docRef = doc(db, "artists", currentEditId);
+          await updateDoc(docRef, { name, slug, bio, imageUrl, category, section, active, videoUrl: videoUrl || null, bioAfterVideo: bioAfterVideo || null,
+bioAfterImage1: bioAfterImage1 || null,
+bioAfterImage2: bioAfterImage2 || null, galleryImages: galleryImages.length ? galleryImages : null,
+updatedAt: serverTimestamp() });
+          alert("Artist updated successfully!");
+          currentEditId = null;
+          saveBtn.textContent = "Save Artist";
+        } else {
+        await addDoc(collection(db, "artists"), {
+  name,
+  slug,
+  bio,
+  imageUrl,
+  category,
+  section,
+  active,
+  videoUrl: videoUrl || null,
+  bioAfterVideo: bioAfterVideo || null,
+  bioAfterImage1: bioAfterImage1 || null,
+  bioAfterImage2: bioAfterImage2 || null,
+  galleryImages: galleryImages.length ? galleryImages : null,
+  createdAt: serverTimestamp(),
+  updatedAt: serverTimestamp()
+});
+
+          alert("Artist added successfully!");
+        }
+        
+        // Clear form
+        document.getElementById("name").value = "";
+        document.getElementById("slug").value = "";
+        document.getElementById("bio").value = "";
+        document.getElementById("imageUrl").value = "";
+        document.getElementById("category").value = "";
+        document.getElementById("active").checked = false;
+        document.getElementById("section").value = "";
+        document.getElementById("videoUrl").value = "";
+        document.getElementById("galleryImage1").value = "";
+document.getElementById("galleryImage2").value = "";
+
+        document.getElementById("bioAfterVideo").value = "";
+        document.getElementById("bioAfterImage1").value = "";
+        document.getElementById("bioAfterImage2").value = "";
+
+
+        
+        loadArtists();
+      } catch (err) {
+        alert("Error: " + err.message);
+      } finally {
+          saveBtn.disabled = false;
+          if(!currentEditId) saveBtn.textContent = "Save Artist";
+      }
+    });
+
+    // Global Window Functions for the buttons
+    window.editArtist = async (id) => {
+      try {
+        const docRef = doc(db, "artists", id);
+        const docSnap = await getDoc(docRef);
+        const artist = docSnap.data();
+
+        document.getElementById("name").value = artist.name;
+        document.getElementById("slug").value = artist.slug;
+        document.getElementById("bio").value = artist.bio;
+        document.getElementById("imageUrl").value = artist.imageUrl;
+        document.getElementById("category").value = artist.category;
+        document.getElementById("active").checked = artist.active;
+        document.getElementById("section").value = artist.section;
+        document.getElementById("videoUrl").value = artist.videoUrl || "";
+document.getElementById("galleryImage1").value = artist.galleryImages?.[0] || "";
+document.getElementById("galleryImage2").value = artist.galleryImages?.[1] || "";
+
+document.getElementById("bioAfterVideo").value = artist.bioAfterVideo || "";
+document.getElementById("bioAfterImage1").value = artist.bioAfterImage1 || "";
+document.getElementById("bioAfterImage2").value = artist.bioAfterImage2 || "";
+
+
+
+
+        currentEditId = id;
+        saveBtn.textContent = "Update Artist";
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (err) {
+        alert("Error fetching artist: " + err.message);
+      }
+    };
+
+    window.deleteArtist = async (id) => {
+      if (!confirm("Are you sure you want to delete this artist?")) return;
+      try {
+        await deleteDoc(doc(db, "artists", id));
+        loadArtists();
+      } catch (err) {
+        alert("Error deleting: " + err.message);
+      }
+    };
+
+    window.toggleActive = async (id) => {
+      try {
+        const docRef = doc(db, "artists", id);
+        const snap = await getDoc(docRef);
+        const currentState = snap.data().active;
+        await updateDoc(docRef, { active: !currentState, updatedAt: serverTimestamp() });
+        loadArtists();
+      } catch (err) {
+        alert("Error toggling status: " + err.message);
+      }
+    };
+
+    loadArtists();
+  </script>
+</body>
+</html>

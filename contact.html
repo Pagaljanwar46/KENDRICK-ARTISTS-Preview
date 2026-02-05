@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy Goals Contact Form</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- Reset & Base Styles --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0fdf4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .card-container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 1200px;
+            border-radius: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            padding: 60px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* --- Back Button --- */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            color: #6b7280;
+            font-weight: 500;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn i {
+            margin-right: 10px;
+            background-color: #f3f4f6;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .back-btn:hover i { background-color: #000; color: #fff; }
+
+        /* --- Grid Layout --- */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+        }
+
+        .headline h1 {
+            font-size: 3.5rem; 
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 40px;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .form-row { display: flex; gap: 20px; }
+
+        .input-group { position: relative; flex: 1; }
+
+        .input-group i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 18px 20px 18px 50px; 
+            background-color: #f9fafb; 
+            border: none;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        textarea { padding-left: 20px; resize: none; }
+
+        input:focus, textarea:focus { box-shadow: 0 0 0 2px #bbf7d0; }
+
+        .checkbox-group { display: flex; align-items: center; gap: 12px; }
+        .checkbox-group input { width: 18px; height: 18px; accent-color: black; cursor: pointer; padding: 0; }
+
+        /* --- Submit Button --- */
+        .submit-btn {
+            display: inline-flex;
+            align-items: center;
+            background-color: #eeeeee;
+            border: none;
+            border-radius: 12px;
+            padding: 8px 8px 8px 24px; 
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover { background-color: #e5e7eb; }
+
+        .btn-text { font-weight: 600; margin-right: 24px; }
+
+        .arrow-box {
+            background-color: #000;
+            color: #fff;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+
+        /* --- Right Column --- */
+        .right-column { display: flex; flex-direction: column; }
+
+        .description-text { margin-bottom: 40px; text-align: right; padding-left: 40px; }
+        .description-text p { color: #6b7280; line-height: 1.6; font-weight: 500; }
+
+        .image-container { flex-grow: 1; border-radius: 30px; overflow: hidden; }
+        .image-container img { width: 100%; height: 100%; object-fit: cover; }
+
+        .social-icons {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+            justify-content: flex-end; 
+        }
+
+        .social-icons a {
+            color: #004282; 
+            font-size: 1.5rem;
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        .social-icons a:hover {
+            color: #d61c4e; 
+            transform: translateY(-3px);
+        }
+
+        /* --- Responsive Queries --- */
+        @media (max-width: 992px) {
+            .main-grid { grid-template-columns: 1fr; gap: 30px; }
+            .description-text { text-align: left; padding-left: 0; order: -1; margin-bottom: 20px; }
+            .image-container { height: 300px; }
+            .social-icons { justify-content: flex-start; margin-top: 15px; }
+        }
+
+        /* EXTRA MOBILE FIXES */
+        @media (max-width: 600px) { 
+            .card-container { padding: 30px 20px; border-radius: 25px; }
+            .headline h1 { font-size: 2.2rem; margin-bottom: 25px; }
+            .form-row { flex-direction: column; gap: 15px; } 
+            .submit-btn { width: 100%; justify-content: space-between; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="card-container">
+        <a href="javascript:void(0)" class="back-btn" onclick="goBack()">
+            <i class="fa-solid fa-arrow-left"></i> Back
+        </a>
+
+        <div class="main-grid">
+            <div class="left-column">
+                <div class="headline">
+                    <h1>Get in Touch With <br> Kendrick Artists</h1>
+                </div>
+
+                <form class="contact-form" id="energyForm">
+                    <div class="form-row">
+                        <div class="input-group">
+                            <i class="fa-regular fa-user"></i>
+                            <input type="text" name="first_name" placeholder="First Name" required>
+                        </div>
+                        <div class="input-group">
+                            <i class="fa-regular fa-user"></i>
+                            <input type="text" name="last_name" placeholder="Last Name" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="input-group">
+                            <i class="fa-solid fa-phone-flip"></i>
+                            <input type="tel" name="phone" placeholder="Phone No">
+                        </div>
+                        <div class="input-group">
+                            <i class="fa-regular fa-envelope"></i>
+                            <input type="email" name="email" placeholder="Email" required>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                       <textarea rows="4" name="message" placeholder="Your message"></textarea>
+                    </div>
+
+                    <div>
+                        <button type="submit" class="submit-btn">
+                            <span class="btn-text">Sent Your Message</span>
+                            <div class="arrow-box">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </div>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="right-column">
+                <div class="description-text">
+                    <p>Whether you’re curious about our artists, want to book a collaboration, or just need more information about Kendrick Artists, we’re here to help.</p>
+                </div>
+                <div class="image-container">
+                    <img src="https://images.unsplash.com/photo-1466611653911-95081537e5b7?q=80&w=1000&auto=format&fit=crop" alt="Wind Turbine">
+                </div>
+
+                <div class="social-icons">
+                    <a href="https://www.facebook.com" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://www.twitter.com" target="_blank"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#" target="_blank"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script>
+        (function(){
+          emailjs.init("ZcvcuUNQJ98su11LE");
+        })();
+
+        const form = document.getElementById("energyForm");
+        form.addEventListener("submit", function(e) {
+            e.preventDefault();
+            emailjs.sendForm("service_j7hksjn", "template_yxth06a", this)
+            .then(function() {
+                alert("Message sent successfully");
+                form.reset();
+            }, function(error) {
+                alert("Failed to send message");
+                console.log(error);
+            });
+        });
+
+        function goBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = "index.html";
+            }
+        }
+    </script>
+</body>
+</html>

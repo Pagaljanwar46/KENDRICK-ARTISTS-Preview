@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KENDRICK & ARTISTS – Personal Appearance</title>
+<link href="https://fonts.googleapis.com/css2?family=Dubai:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+<style>
+/* ================= RESET ================= */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background: #fff;
+  overflow-x: hidden;
+}
+
+/* ================= HEADER ================= */
+header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  padding: 20px 40px;
+  background: white;
+  border-bottom: 1px solid #f0f0f0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 600;
+  color: #003366;
+  text-transform: lowercase;
+  letter-spacing: 0.5px;
+}
+
+
+/* ================= MENU BUTTON ================= */
+.nav-trigger {
+  font-size: 1.1rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: #003366;
+  z-index: 1002;
+}
+
+.nav-trigger.active {
+  position: fixed;
+  top: 20px;
+  right: 40px;
+  color: white;
+}
+
+/* ================= MENU OVERLAY ================= */
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: black;
+  z-index: 1001;
+  transform: translateY(-100%);
+  transition: transform 0.8s cubic-bezier(0.85, 0, 0.15, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 10%;
+}
+
+.menu-overlay.active {
+  transform: translateY(0);
+}
+
+/* ================= BACK BUTTON ================= */
+.menu-back {
+  position: fixed;
+  top: calc(20px + 1cm); 
+  right: 40px;
+  font-size: 1rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: white;
+  cursor: pointer;
+  z-index: 1003;
+  display: none;
+}
+
+
+.menu-overlay.active .menu-back {
+  display: block;
+}
+
+/* ================= MENU CONTENT ================= */
+.menu-header-label {
+  color: white;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+  font-weight: 700;
+}
+
+.submenu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.submenu {
+  font-size: 3.5rem;
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.submenu:hover { opacity: 0.6; }
+
+.menu-desc {
+  color: white;
+  max-width: 450px;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-top: 50px;
+  opacity: 0.8;
+}
+
+/* ================= NEW SOCIAL & CONTACT WRAPPER ================= */
+.contact-wrapper {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  z-index: 1005;
+}
+
+.social-links {
+  display: flex;
+  gap: 15px;
+}
+
+.social-links a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease;
+}
+
+.social-links a:hover {
+  opacity: 0.6;
+}
+
+.social-links svg {
+  width: 20px;
+  height: 20px;
+  fill: white;
+}
+
+.contact-btn {
+  background: white;
+  color: black;
+  padding: 14px 28px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform 0.3s ease;
+}
+
+.contact-btn:hover {
+    transform: scale(1.05);
+}
+
+/* ================= GRID ================= */
+.roster-grid {
+  padding: 120px 40px 40px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+}
+
+.artist-card {
+  position: relative;
+  padding-top: 125%; /* adjusts card height to fit most portrait images nicely */
+  overflow: hidden;
+  border: 4px solid transparent;
+  transition: border 0.2s ease;
+}
+
+.artist-card img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: auto;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+
+
+
+  .artist-name {
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+
+
+.artist-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.artist-link:hover .artist-card {
+  border-color: #003366;
+}
+
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 900px) {
+  .roster-grid { grid-template-columns: repeat(2, 1fr); }
+  .submenu { font-size: 2.2rem; }
+  .nav-trigger.active,
+  .menu-back { right: 20px; }
+  .contact-wrapper { right: 20px; bottom: 20px; flex-direction: column-reverse; align-items: flex-end; gap: 15px; }
+}
+
+.menu-bg-image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 0.5s ease, background-image 0.4s ease;
+  z-index: -1;
+}
+
+.menu-overlay.active .menu-bg-image {
+  opacity: 0.4;
+}
+
+
+
+.personal-page .artist-name {
+  margin-top: 14px;
+  text-align: center;
+  color: #000;
+  text-transform: uppercase;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+
+
+
+.personal-page .artist-name {
+  margin-top: 14px;
+  text-align: center;
+  color: #000;
+  text-transform: uppercase;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.social-container svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+
+
+
+.artist-info-box {
+    margin-top: 87px;
+    width: 260px;
+    background: transparent;
+    padding: 15px 20px;
+    font-size: 13px;            /* was 11px */
+    box-shadow: none;
+    color: #fff;
+    font-family: 'Dubai', sans-serif;
+}
+
+
+.artist-info-box h4 {
+    font-size: 17px;            /* was 14px */
+    font-weight: 900;
+    color: #fff;
+    font-family: 'Dubai', sans-serif;
+}
+
+
+.artist-info-box p {
+    font-size: 13px;            /* new explicit size */
+    font-weight: 700;
+    color: #fff;
+    font-family: 'Dubai', sans-serif;
+}
+
+/* Hide on small mobiles to prevent overlap with buttons */
+@media (max-width: 600px) {
+    .artist-info-box {
+        display: none;
+    }
+}
+</style>
+</head>
+
+<body class="personal-page">
+
+
+<header>
+  <div class="logo">Personal Appearance</div>
+  <div class="nav-trigger" id="menuBtn" onclick="toggleMenu()">menu</div>
+</header>
+
+<div class="menu-overlay" id="menu">
+    <div class="menu-bg-image" id="menuBg"></div>
+
+  <div class="menu-back" onclick="toggleMenu()">back</div>
+
+  <div class="menu-header-label">talent</div>
+
+  <div class="submenu-list">
+
+     <a href="comedy.html" class="submenu" data-bg="https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&q=80&w=1920">
+       <span>&gt;</span> Comedy
+    </a>
+
+   <a href="Artists.html" class="submenu" data-bg="https://res.cloudinary.com/dgcr7e27r/image/upload/v1769848593/Best-Cameras_bb8kf5.webp">
+   <span>&gt;</span> Personal Appearance
+   </a>
+
+    <a href="music.html" class="submenu" data-bg="https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&q=80&w=1920">
+        <span>&gt;</span> Music
+    </a>
+
+    <a href="index.html" class="submenu" data-bg="https://images.unsplash.com/photo-1493225255756-d9584f8606e9">
+       <span>&gt;</span> Home
+    </a>
+   
+  </div>
+
+  <div class="artist-info-box">
+    <h4>Artist Manager/Agent</h4>
+    <p>(AHR-tist MAN-uh-jer)</p>
+    <p style="margin-top: 8px;">
+       A person responsible for developing a comedian’s long-term strategy, advising on branding and creative choices, managing relationships with venues, agents, and other industry professionals, and collaborating with booking agents who secure live appearances, negotiate show terms, and coordinate the logistics of performances.
+    </p>
+</div>
+
+  <div class="contact-wrapper">
+    <div class="social-links">
+        <a href="#" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c.796 0 1.441.645 1.441 1.44s-.645 1.44-1.441 1.44c-.795 0-1.439-.645-1.439-1.44s.644-1.44 1.439-1.44z"/></svg></a>
+        <a href="#" target="_blank"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+        <a href="#" target="_blank"><svg viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg></a>
+        <a href="#" target="_blank"><svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
+        <a href="#" target="_blank">
+  <svg viewBox="0 0 24 24">
+    <path d="M12.94 2c.33 2.46 1.7 3.93 4.06 4.12v3.03c-1.42.14-2.65-.32-4.03-1.16v5.63c0 4.06-4.44 5.32-7.18 3.54-1.76-1.14-2.72-3.74-1.6-5.86 1.07-2.02 3.92-2.85 5.97-2.1v3.2c-.3-.1-.6-.15-.9-.15-1.33 0-2.18 1.02-1.96 2.13.4 2.04 4.01 2.64 3.96-.77V2h1.68z"/>
+  </svg>
+</a>
+
+    </div>
+    <a href="contact.html" class="contact-btn">Contact</a>
+  </div>
+</div>
+
+<main class="roster-grid" id="rosterGrid"></main>
+
+<script>
+function toggleMenu() {
+  const menu = document.getElementById('menu');
+  const btn = document.getElementById('menuBtn');
+
+  menu.classList.toggle('active');
+
+  if (menu.classList.contains('active')) {
+    btn.textContent = 'close';
+    btn.classList.add('active');
+  } else {
+    btn.textContent = 'menu';
+    btn.classList.remove('active');
+  }
+}
+</script>
+
+<script>
+const submenus = document.querySelectorAll('.submenu');
+const menuBg = document.getElementById('menuBg');
+
+submenus.forEach(item => {
+  item.addEventListener('mouseenter', () => {
+    const bgUrl = item.getAttribute('data-bg');
+    if (bgUrl) {
+      menuBg.style.backgroundImage = `url('${bgUrl}')`;
+    }
+  });
+});
+</script>
+
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAGbc3hE5qsN8axCsRNaNH4CNSDp3Yave8",
+  authDomain: "kendrick-artists-clarck.firebaseapp.com",
+  projectId: "kendrick-artists-clarck",
+  storageBucket: "kendrick-artists-clarck.firebasestorage.app",
+  messagingSenderId: "695415417830",
+  appId: "1:695415417830:web:f5d196cdf9334f80220427"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+async function loadArtists() {
+  const grid = document.getElementById("rosterGrid");
+  grid.innerHTML = "";
+
+  const q = query(
+    collection(db, "artists"),
+    where("active", "==", true)
+  );
+
+  const snapshot = await getDocs(q);
+
+  snapshot.forEach(docSnap => {
+    const artist = docSnap.data();
+
+    // ✅ Show Personal OR Both
+    if (artist.section === "personal" || artist.section === "both") {
+      const a = document.createElement("a");
+      a.className = "artist-link";
+      a.href = `profile.html?id=${docSnap.id}&from=personal`;
+      a.innerHTML = `
+        <div class="artist-card">
+          <img src="${artist.imageUrl || 'https://via.placeholder.com/500'}">
+        </div>
+        <div class="artist-name">${artist.name}</div>
+      `;
+      grid.appendChild(a);
+    }
+  });
+}
+
+
+window.addEventListener("DOMContentLoaded", loadArtists);
+</script>
+
+</body>
+</html>

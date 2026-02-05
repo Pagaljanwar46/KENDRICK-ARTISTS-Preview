@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KENDRICK & ARTISTS</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dubai:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- RESET & FONTS --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #000;
+            overflow-x: hidden;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #fff; /* Match image background */
+        }
+
+        .bg-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            min-width: 100%;
+            min-height: 100%;
+            z-index: 1;
+            object-fit: cover;
+        }
+
+        .mask-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+
+        svg { width: 100%; height: 100%; }
+
+        /* --- FIXED: Base Text Styles moved here so Media Queries work --- */
+        svg text {
+            font-size: 180px;
+            letter-spacing: 8px;
+            font-family: 'Dubai','Segoe UI',sans-serif;
+            font-weight: 800;
+        }
+
+        /* --- NAVIGATION TRIGGER --- */
+        .nav-trigger {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            text-transform: lowercase;
+            transition: color 0.3s ease;
+        }
+
+        .nav-trigger.light { color: white; }
+        .nav-trigger.dark { color: white; left: auto; right: 60px; transform: none; }
+
+        /* --- GERSH-STYLE MENU OVERLAY --- */
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: #000;
+            z-index: 999;
+            transform: translateY(-100%);
+            transition: transform 0.8s cubic-bezier(0.85, 0, 0.15, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-left: 10%;
+            overflow: hidden;
+        }
+
+        .menu-overlay.active { transform: translateY(0); }
+
+        .menu-bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 0.5s ease, background-image 0.4s ease-in-out;
+            z-index: -1;
+        }
+
+        .menu-overlay.active .menu-bg-image { opacity: 0.4; }
+
+        .menu-header-label {
+            color: #fff;
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            font-weight: 700;
+        }
+
+        .submenu-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .submenu {
+            display: flex;
+            align-items: center;
+            font-size: 3.5rem;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 700;
+            line-height: 1.1;
+            transition: opacity 0.3s ease;
+            text-transform: lowercase;
+        }
+
+        .submenu span {
+            font-weight: 300;
+            margin-right: 20px;
+        }
+
+        .submenu:hover { opacity: 0.6; }
+
+        .menu-desc {
+            color: #fff;
+            max-width: 450px;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-top: 50px;
+            opacity: 0.8;
+        }
+
+        .artist-info-box {
+            margin-top: 87px;
+            width: 260px;
+            background: transparent;
+            padding: 15px 20px;
+            font-size: 13px;
+            box-shadow: none;
+            color: #fff;
+            font-family: 'Dubai', sans-serif;
+        }
+
+        .artist-info-box h4 {
+            font-size: 17px;
+            font-weight: 900;
+            color: #fff;
+            font-family: 'Dubai', sans-serif;
+        }
+        .artist-info-box p {
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            font-family: 'Dubai', sans-serif;
+        }
+
+        @media (max-width: 600px) {
+            .artist-info-box { display: none; }
+        }
+
+        .menu-overlay .contact-btn {
+            position: absolute;
+            bottom: 40px;
+            right: 50px;
+            background: #fff;
+            color: #000;
+            padding: 14px 28px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .social-container {
+            position: absolute;
+            bottom: 52px; 
+            right: 200px; 
+            display: flex;
+            gap: 25px;
+            z-index: 1001;
+        }
+
+        .social-container a {
+            color: #fff;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease, color 0.3s ease;
+            text-decoration: none;
+        }
+
+        .social-container a:hover {
+            color: #ccc;
+            transform: translateY(-3px);
+        }
+
+        .bottom-text {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            color: black; /* Changed to match image */
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        @media (max-width: 1200px) {
+            svg text { font-size: 140px; letter-spacing: 6px; }
+        }
+
+        @media (max-width: 768px) {
+            svg text { font-size: 70px; letter-spacing: 3px; }
+            .submenu { font-size: 2.2rem; }
+            .nav-trigger.dark { right: 30px; }
+            .swirl-img { display: none; }
+            .menu-overlay { padding-left: 8%; }
+            .social-container { right: auto; left: 8%; bottom: 30px; }
+            .bottom-text { font-size: 0.75rem; text-align: center; }
+        }
+
+        @media (max-width: 480px) {
+            svg text { font-size: 38px; letter-spacing: 1px; }
+            .submenu { font-size: 1.6rem; }
+        }
+
+        .nav-trigger { text-transform: uppercase; letter-spacing: 2px; }
+.swirl-img {
+  pointer-events: none;
+}
+
+    </style>
+</head>
+
+<body>
+
+    <div class="nav-trigger light" onclick="toggleMenu()">ARTISTS</div>
+
+    <div class="menu-overlay" id="menu">
+        <div class="menu-bg-image" id="menuBg"></div>
+        <div class="menu-header-label">talent</div>
+
+        <div class="submenu-list">
+             <a href="comedy.html" class="submenu" data-bg="https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&q=80&w=1920">
+                <span>&gt;</span> Comedy
+            </a>
+            <a href="Artists.html" class="submenu" data-bg="https://res.cloudinary.com/dgcr7e27r/image/upload/v1769848593/Best-Cameras_bb8kf5.webp">
+                <span>&gt;</span> Personal Appearance
+            </a>
+            <a href="music.html" class="submenu" data-bg="https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&q=80&w=1920">
+                <span>&gt;</span> Music
+            </a>
+        </div>
+
+        <div class="artist-info-box">
+            <h4>Artist Manager/Agent</h4>
+            <p>(AHR-tist MAN-uh-jer)</p>
+            <p style="margin-top: 8px;">A person responsible for developing a comedian’s long-term strategy, advising on branding and creative choices, managing relationships with venues, agents, and other industry professionals.</p>
+        </div>
+
+        <div class="social-container">
+            <a href="https://www.instagram.com/kendrickartists/" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-tiktok"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+        </div>
+
+        <a href="contact.html" class="contact-btn">Contact</a>
+    </div>
+
+    <div class="hero-container">
+        <video class="bg-video" autoplay muted loop playsinline>
+            <source src="https://res.cloudinary.com/dgcr7e27r/video/upload/v1769517514/Video_Project_1_1_lduqak.mp4" type="video/mp4">
+        </video>
+
+        <div class="mask-layer">
+          <svg preserveAspectRatio="xMidYMid slice" viewBox="0 0 1920 1080">
+
+
+                <defs>
+                    <mask id="text-mask">
+                        <rect width="100%" height="100%" fill="white"/>
+                        <text x="960" y="540" text-anchor="middle" dominant-baseline="middle">KENDRICK ARTISTS</text>
+                    </mask>
+                </defs>
+                
+                <path d="M0,150 L300,130 L500,50 L750,80 L960,20 L1200,80 L1500,50 L1920,150 L1920,0 L0,0 Z" fill="black" />
+                
+                <g mask="url(#text-mask)">
+                  <rect x="0" y="0" width="100%" height="100%" fill="white" />
+
+<image
+  href="https://res.cloudinary.com/dgcr7e27r/image/upload/v1770311547/Final_Hollywood_Map_02052026_1_1_fmsdxy.png"
+  x="0" y="0"
+  width="100%"
+  height="100%"
+  preserveAspectRatio="xMidYMid slice"
+/>
+
+<image
+  href="Assects/swirl.png"
+  class="swirl-img"
+  x="-240"
+  y="-735"
+  width="2400"
+  height="2400"
+  opacity="1"
+  preserveAspectRatio="xMidYMid meet"
+/>
+
+
+
+
+
+                </g>
+            </svg>
+        </div>
+
+        <div class="bottom-text">AN ENTERTAINMENT COMPANY</div>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('menu');
+            const trigger = document.querySelector('.nav-trigger');
+            menu.classList.toggle('active');
+            if (menu.classList.contains('active')) {
+                trigger.textContent = 'close';
+                trigger.classList.remove('light');
+                trigger.classList.add('dark');
+            } else {
+                trigger.textContent = 'artists';
+                trigger.classList.remove('dark');
+                trigger.classList.add('light');
+            }
+        }
+
+        const submenus = document.querySelectorAll('.submenu');
+        const menuBg = document.getElementById('menuBg');
+        submenus.forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                const bgUrl = item.getAttribute('data-bg');
+                if (bgUrl) { menuBg.style.backgroundImage = `url('${bgUrl}')`; }
+            });
+        });
+    </script>
+</body>
+</html>

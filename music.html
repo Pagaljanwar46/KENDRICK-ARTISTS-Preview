@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KENDRICK & ARTISTS – Music</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Dubai:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #fff;
+    overflow-x: hidden;
+}
+
+.nav-trigger {
+    position: fixed;
+    top: 30px;
+    right: 40px;
+    z-index: 1000;
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.nav-trigger.light { color: #07315a; }
+.nav-trigger.dark { color: white; }
+
+.menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 999;
+    transform: translateY(-100%);
+    transition: transform 0.8s cubic-bezier(0.85, 0, 0.15, 1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 10%;
+}
+
+.menu-overlay.active { transform: translateY(0); }
+
+.menu-bg-image {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    z-index: -1;
+}
+
+.menu-overlay.active .menu-bg-image { opacity: 0.4; }
+
+.menu-header-label {
+    color: #fff;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+    font-weight: 700;
+}
+
+.submenu-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.submenu {
+    display: flex;
+    align-items: center;
+    font-size: 3.5rem;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    text-transform: lowercase;
+}
+
+.submenu span {
+    font-weight: 300;
+    margin-right: 20px;
+}
+
+.menu-desc {
+    color: #fff;
+    max-width: 450px;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-top: 50px;
+    opacity: 0.8;
+}
+
+.contact-btn {
+    position: absolute;
+    bottom: 40px;
+    right: 50px;
+    background: #fff;
+    color: #000;
+    padding: 14px 28px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.social-icons-wrapper {
+    position: absolute;
+    bottom: 52px;
+    right: 200px;
+    display: flex;
+    gap: 25px;
+}
+
+.social-link {
+    color: #fff;
+    font-size: 1.2rem;
+    opacity: 0.6;
+}
+
+.roster-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    padding: 120px 40px 40px;
+}
+
+.artist-card {
+    position: relative;
+    padding-top: 125%;
+    overflow: hidden;
+    border: 4px solid transparent;
+}
+
+.artist-card img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+.artist-name {
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.artist-link {
+    text-decoration: none;
+    color: #000;
+}
+
+.artist-link:hover .artist-card {
+    border-color: #003366;
+}
+
+
+.page-heading {
+    position: fixed;
+    top: 30px;
+    left: 40px;
+    z-index: 1000;
+    font-size: 24px;
+    font-weight: 600;
+    color: #003366;
+    text-transform: lowercase;
+}
+
+.artist-info-box {
+    margin-top: 87px;
+    width: 260px;
+    background: transparent;
+    padding: 15px 20px;
+    font-size: 13px;            /* was 11px */
+    box-shadow: none;
+    color: #fff;
+    font-family: 'Dubai', sans-serif;
+}
+
+
+
+.artist-info-box h4 {
+    font-size: 17px;            /* was 14px */
+    font-weight: 900;
+    color: #fff;
+    font-family: 'Dubai', sans-serif;
+}
+
+
+.artist-info-box p {
+    font-size: 13px;            /* new explicit size */
+    font-weight: 700;
+    color: #fff;
+    font-family: 'Dubai', sans-serif;
+}
+
+
+
+@media (max-width: 600px) {
+    .artist-info-box { display: none; }
+}
+</style>
+</head>
+
+<body class="music-page">
+
+<div class="page-heading">Music</div>
+<div class="nav-trigger light" onclick="toggleMenu()">MENU</div>
+
+<div class="menu-overlay" id="menu">
+    <div class="menu-bg-image" id="menuBg"></div>
+
+    <div class="menu-header-label">talent</div>
+
+    <div class="submenu-list">
+        <a href="comedy.html" class="submenu" data-bg="https://images.unsplash.com/photo-1475721027785-f74eccf877e2">
+            <span>&gt;</span> Comedy
+        </a>
+
+        <a href="Artists.html" class="submenu" data-bg="https://res.cloudinary.com/dgcr7e27r/image/upload/v1769848593/Best-Cameras_bb8kf5.webp">
+            <span>&gt;</span> Personal Appearance
+        </a>
+
+        <a href="music.html" class="submenu" data-bg="https://images.unsplash.com/photo-1511379938547-c1f69419868d">
+            <span>&gt;</span> Music
+        </a>
+
+        <a href="index.html" class="submenu" data-bg="https://images.unsplash.com/photo-1493225255756-d9584f8606e9">
+            <span>&gt;</span> Home
+        </a>
+    </div>
+
+    <div class="artist-info-box">
+        <h4>Artist Manager/Agent</h4>
+        <p>(AHR-tist MAN-uh-jer)</p>
+        <p style="margin-top:8px;">
+           A person responsible for developing a comedian’s long-term strategy, advising on branding and creative choices, managing relationships with venues, agents, and other industry professionals, and collaborating with booking agents who secure live appearances, negotiate show terms, and coordinate the logistics of performances.
+        </p>
+    </div>
+
+    <div class="social-icons-wrapper">
+        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-x-twitter"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+    </div>
+
+    <a href="contact.html" class="contact-btn">Contact</a>
+</div>
+
+<main class="roster-grid" id="musicGrid"></main>
+
+<script>
+function toggleMenu() {
+    const menu = document.getElementById('menu');
+    const trigger = document.querySelector('.nav-trigger');
+    menu.classList.toggle('active');
+    trigger.textContent = menu.classList.contains('active') ? 'close' : 'menu';
+    trigger.classList.toggle('dark');
+    trigger.classList.toggle('light');
+}
+
+document.querySelectorAll('.submenu').forEach(item => {
+    item.addEventListener('mouseenter', () => {
+        document.getElementById('menuBg').style.backgroundImage =
+            `url('${item.dataset.bg}')`;
+    });
+});
+</script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
+import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyAGbc3hE5qsN8axCsRNaNH4CNSDp3Yave8",
+    authDomain: "kendrick-artists-clarck.firebaseapp.com",
+    projectId: "kendrick-artists-clarck",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+async function loadMusicArtists() {
+    const grid = document.getElementById("musicGrid");
+    grid.innerHTML = "";
+
+    const q = query(collection(db, "artists"), where("active", "==", true));
+    const snapshot = await getDocs(q);
+
+    snapshot.forEach(docSnap => {
+        const artist = docSnap.data();
+
+        // Only include artists that are strictly in the music section
+        if (artist.section === "music") {
+            const a = document.createElement("a");
+            a.className = "artist-link";
+            a.href = `profile.html?id=${docSnap.id}&from=music`;
+            a.innerHTML = `
+                <div class="artist-card">
+                    <img src="${artist.imageUrl || 'https://via.placeholder.com/500'}">
+                </div>
+                <div class="artist-name">${artist.name}</div>
+            `;
+            grid.appendChild(a);
+        }
+    });
+}
+
+
+window.addEventListener("DOMContentLoaded", loadMusicArtists);
+</script>
+
+</body>
+</html>
+
