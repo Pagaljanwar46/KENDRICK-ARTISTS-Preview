@@ -5,7 +5,7 @@ import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/fir
 // Your Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyAGbc3hE5qsN8axCsRNaNH4CNSDp3Yave8",
-  authDomain: "Ykendrick-artists-clarck.firebaseapp.com",
+  authDomain: "kendrick-artists-clarck.firebaseapp.com",
   projectId: "kendrick-artists-clarck",
   appId: "1:695415417830:web:f5d196cdf9334f80220427"
 };
