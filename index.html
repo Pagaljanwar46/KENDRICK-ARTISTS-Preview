@@ -1,33 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-35DBJHNZH4"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-35DBJHNZH4');
-</script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-35DBJHNZH4"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-35DBJHNZH4');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kendrick Artists | Talent & Entertainment Management</title>
-<meta name="description" content="Kendrick Artists is a full-service entertainment company representing comedians, musicians, and talent for live events, tours, and personal appearances.">
-<meta property="og:title" content="Kendrick Artists">
-<meta property="og:description" content="Talent management and entertainment company representing comedians, musicians, and live performers.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://kendrickartists.com">
-<meta property="og:image" content="https://kendrickartists.com/Assects/logo.png">
+    <meta name="description" content="Kendrick Artists is a full-service entertainment company representing comedians, musicians, and talent for live events, tours, and personal appearances.">
+    <meta property="og:title" content="Kendrick Artists">
+    <meta property="og:description" content="Talent management and entertainment company representing comedians, musicians, and live performers.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kendrickartists.com">
+    <meta property="og:image" content="https://kendrickartists.com/Assects/logo.png">
 
-    
-
-<!--- Browser logo -->
-<link rel="icon" type="image/gif" href="/Assects/favicon.gif">
-
-
-
+    <link rel="icon" type="image/png" href="/Assects/favicon.png">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Dubai:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -73,40 +64,74 @@
 
         svg { width: 100%; height: 100%; }
 
-        /* --- FIXED: Base Text Styles moved here so Media Queries work --- */
-       svg text {
-    font-size: 190px;
+        /* --- DESKTOP PREVIEW (Default) --- */
+        svg text {
+            font-size: 190px;
+            letter-spacing: 6px;
+            font-family: 'Dubai','Segoe UI',sans-serif;
+            font-weight: 900;
+        }
+              .line1, .line2 {
+    display: inline;
+}
+
+
+
+        /* --- MOBILE PREVIEW (Responsive) --- */
+        @media (max-width: 1024px) {
+            svg text { 
+                font-size: 80px; 
+                letter-spacing: 3px; 
+            }
+            .submenu { font-size: 2.2rem; }
+            .nav-trigger.dark { right: 30px; }
+            .social-container { right: auto; left: 8%; bottom: 30px; }
+            .bottom-text { font-size: 0.9rem; }
+        }
+
+     @media (max-width: 480px) {
+
+   svg text {
+    font-size: 90px;
     letter-spacing: 6px;
     font-family: 'Dubai','Segoe UI',sans-serif;
-    font-weight: 900;
+    font-weight: 800;
+   
+}
+
+
+
+    .line1, .line2 {
+        display: block;
+    }
+
+   
+
 }
 
 
         /* --- NAVIGATION TRIGGER --- */
-       .nav-trigger {
-    position: fixed;
-    top: 6vh;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
-    font-weight: 700;
-    font-size: 1.1rem;
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-family: 'Dubai', sans-serif;
-}
-@media (max-height: 800px) {
-    .nav-trigger {
-        top: 4.5vh;
-    }
-}
-
+        .nav-trigger {
+            position: fixed;
+            top: 6vh;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-family: 'Dubai', sans-serif;
+        }
+        @media (max-height: 800px) {
+            .nav-trigger { top: 4.5vh; }
+        }
 
         .nav-trigger.light { color: white; }
         .nav-trigger.dark { color: white; left: auto; right: 60px; transform: none; }
 
-        /* --- GERSH-STYLE MENU OVERLAY --- */
+        /* --- MENU OVERLAY --- */
         .menu-overlay {
             position: fixed;
             top: 0;
@@ -127,17 +152,21 @@
         .menu-overlay.active { transform: translateY(0); }
 
         .menu-bg-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-size: cover;
-            background-position: center;
-            opacity: 0;
-            transition: opacity 0.5s ease, background-image 0.4s ease-in-out;
-            z-index: -1;
-        }
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.4; /* keeps it slightly transparent like hover effect */
+    transition: opacity 0.5s ease, background-image 0.4s ease-in-out;
+    z-index: -1;
+
+    /* Default background image */
+    background-image: url('https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&q=80&w=1920');
+}
+
 
         .menu-overlay.active .menu-bg-image { opacity: 0.4; }
 
@@ -168,11 +197,7 @@
             text-transform: lowercase;
         }
 
-        .submenu span {
-            font-weight: 300;
-            margin-right: 20px;
-        }
-
+        .submenu span { font-weight: 300; margin-right: 20px; }
         .submenu:hover { opacity: 0.6; }
 
         .menu-desc {
@@ -190,23 +215,12 @@
             background: transparent;
             padding: 15px 20px;
             font-size: 13px;
-            box-shadow: none;
             color: #fff;
             font-family: 'Dubai', sans-serif;
         }
 
-        .artist-info-box h4 {
-            font-size: 17px;
-            font-weight: 900;
-            color: #fff;
-            font-family: 'Dubai', sans-serif;
-        }
-        .artist-info-box p {
-            font-size: 13px;
-            font-weight: 700;
-            color: #fff;
-            font-family: 'Dubai', sans-serif;
-        }
+        .artist-info-box h4 { font-size: 17px; font-weight: 900; color: #fff; }
+        .artist-info-box p { font-size: 13px; font-weight: 700; color: #fff; }
 
         @media (max-width: 600px) {
             .artist-info-box { display: none; }
@@ -245,54 +259,44 @@
             transform: translateY(-3px);
         }
 
-      .bottom-text {
-    position: absolute;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 3;
-    color: black;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-family: 'Dubai', sans-serif;
-    font-weight: 700;
-    font-size: 1.4rem;
-}
-
-
-
-        @media (max-width: 1200px) {
-            svg text { font-size: 140px; letter-spacing: 6px; }
+        .bottom-text {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            color: black;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-family: 'Dubai', sans-serif;
+            font-weight: 700;
+            font-size: 1.4rem;
         }
 
-        @media (max-width: 768px) {
-            svg text { font-size: 70px; letter-spacing: 3px; }
-            .submenu { font-size: 2.2rem; }
-            .nav-trigger.dark { right: 30px; }
-            .swirl-img { display: none; }
-            .menu-overlay { padding-left: 8%; }
-            .social-container { right: auto; left: 8%; bottom: 30px; }
-            .bottom-text { font-size: 0.75rem; text-align: center; }
-        }
-
-        @media (max-width: 480px) {
-            svg text { font-size: 38px; letter-spacing: 1px; }
-            .submenu { font-size: 1.6rem; }
-        }
-
-        .nav-trigger { text-transform: uppercase; letter-spacing: 2px; }
-.swirl-img {
-  pointer-events: none;
-}
-
-
-
-
+        .swirl-img { pointer-events: none; }
     </style>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "@id": "https://kendrickartists.com/#organization",
+      "name": "Kendrick Artists",
+      "url": "https://kendrickartists.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://kendrickartists.com/Assects/logo.png",
+        "width": 512,
+        "height": 512
+      },
+      "sameAs": [
+        "https://www.instagram.com/kendrickartists/"
+      ]
+    }
+    </script>
 </head>
 
 <body>
-
     <div class="nav-trigger light" onclick="toggleMenu()">ARTISTS</div>
 
     <div class="menu-overlay" id="menu">
@@ -335,21 +339,17 @@
 
         <div class="mask-layer">
           <svg preserveAspectRatio="xMidYMid slice" viewBox="0 0 1920 1080">
-
-
                 <defs>
                     <mask id="text-mask">
                         <rect width="100%" height="100%" fill="white"/>
-                       <text
-  id="heroText"
-  x="960"
-  y="540"
-  text-anchor="middle"
-  dominant-baseline="middle"
-  fill="black"
-  stroke="black"
->
-  KENDRICK ARTISTS
+   <text id="heroText"
+      x="960"
+      y="540"
+      text-anchor="middle"
+      dominant-baseline="middle"
+      fill="black"
+      stroke="black">
+    KENDRICK ARTISTS
 </text>
 
 
@@ -360,36 +360,17 @@
                 
                 <g mask="url(#text-mask)">
                   <rect x="0" y="0" width="100%" height="100%" fill="white" />
+                  <foreignObject x="0" y="0" width="100%" height="100%">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%; height:100%;">
+                      <video autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover; display:block;">
+                        <source src="https://res.cloudinary.com/dgcr7e27r/video/upload/v1770737386/206895_1_huybxy.mp4" type="video/mp4">
+                      </video>
+                    </div>
 
-<foreignObject x="0" y="0" width="100%" height="100%">
-  <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%; height:100%;">
-    <video
-      autoplay
-      muted
-      loop
-      playsinline
-      style="width:100%; height:100%; object-fit:cover; display:block;"
-    >
-      <source src="https://res.cloudinary.com/dgcr7e27r/video/upload/v1770737386/206895_1_huybxy.mp4" type="video/mp4">
-    </video>
-  </div>
-</foreignObject>
+                    <!---swirl--->
 
-
-<image
-  href="Assects/swirl.png"
-  class="swirl-img"
-  x="-240"
-  y="-735"
-  width="2400"
-  height="2400"
-  opacity="1"
-  preserveAspectRatio="xMidYMid meet"
-/>
-
-
-
-
+                  </foreignObject>
+                 <image id="swirlImage" href="Assects/swirl.png" class="swirl-img" x="-240" y="-735" width="2400" height="2400" opacity="1" preserveAspectRatio="xMidYMid meet" />
 
                 </g>
             </svg>
@@ -422,6 +403,47 @@
                 if (bgUrl) { menuBg.style.backgroundImage = `url('${bgUrl}')`; }
             });
         });
+
+
+
+
+    function updateHeroText() {
+
+    var heroText = document.getElementById("heroText");
+    var swirl = document.getElementById("swirlImage");
+
+    if (window.innerWidth <= 480) {
+                                                                           // line
+        heroText.innerHTML =
+            '<tspan x="960" dy="-40">KENDRICK</tspan>' +            
+            '<tspan x="960" dy="140">ARTISTS</tspan>';
+
+        swirl.setAttribute("width", "500");
+swirl.setAttribute("height", "500");
+
+        swirl.setAttribute("x", "710");
+        swirl.setAttribute("y", "310");
+
+
+
+    } else {
+
+        heroText.innerHTML = "KENDRICK ARTISTS";
+
+        swirl.setAttribute("width", "2400");
+        swirl.setAttribute("height", "2400");
+        swirl.setAttribute("x", "-240");
+        swirl.setAttribute("y", "-735");
+    }
+}
+
+
+
+
+updateHeroText();
+
+window.addEventListener("resize", updateHeroText);
+
     </script>
 </body>
 </html>
