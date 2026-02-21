@@ -19,7 +19,6 @@
     <meta property="og:image" content="https://kendrickartists.com/Assects/logo.png">
 
     <link rel="icon" type="image/png" href="/Assects/favicon.png">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Dubai:wght@400;500;700;900&display=swap" rel="stylesheet">
     
@@ -30,16 +29,18 @@
         body {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             background-color: #000;
-            overflow-x: hidden;
+            overflow: hidden; /* Prevents scroll bounce on mobile */
         }
 
         /* --- HERO SECTION --- */
         .hero-container {
             position: relative;
-            width: 100%;
+            width: 100vw;
             height: 100vh;
+            /* Use safe-area-inset to handle iOS notches and bottom bars */
+            height: 100dvh; 
             overflow: hidden;
-            background-color: #fff; /* Match image background */
+            background-color: #fff; 
         }
 
         .bg-video {
@@ -64,56 +65,33 @@
 
         svg { width: 100%; height: 100%; }
 
-        /* --- DESKTOP PREVIEW (Default) --- */
         svg text {
             font-size: 190px;
             letter-spacing: 6px;
             font-family: 'Dubai','Segoe UI',sans-serif;
             font-weight: 900;
         }
-              .line1, .line2 {
-    display: inline;
-}
 
-
-
-        /* --- MOBILE PREVIEW (Responsive) --- */
-        @media (max-width: 1024px) {
-            svg text { 
-                font-size: 80px; 
-                letter-spacing: 3px; 
-            }
-            .submenu { font-size: 2.2rem; }
-            .nav-trigger.dark { right: 30px; }
-            .social-container { right: auto; left: 8%; bottom: 30px; }
-            .bottom-text { font-size: 0.9rem; }
+        .bottom-text {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            color: black;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-family: 'Dubai', sans-serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            width: 100%;
+            text-align: center;
         }
-
-     @media (max-width: 480px) {
-
-   svg text {
-    font-size: 90px;
-    letter-spacing: 6px;
-    font-family: 'Dubai','Segoe UI',sans-serif;
-    font-weight: 800;
-   
-}
-
-
-
-    .line1, .line2 {
-        display: block;
-    }
-
-   
-
-}
-
 
         /* --- NAVIGATION TRIGGER --- */
         .nav-trigger {
             position: fixed;
-            top: 6vh;
+            top: max(5vh, 25px);
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
@@ -123,60 +101,65 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             font-family: 'Dubai', sans-serif;
-        }
-        @media (max-height: 800px) {
-            .nav-trigger { top: 4.5vh; }
+            padding: 10px; /* Better touch target for mobile */
+            transition: color 0.3s ease;
         }
 
         .nav-trigger.light { color: white; }
-        .nav-trigger.dark { color: white; left: auto; right: 60px; transform: none; }
+        .nav-trigger.dark { color: white; left: auto; right: 5%; transform: none; }
 
-        /* --- MENU OVERLAY --- */
+        /* --- MENU OVERLAY (Flexbox Refactor) --- */
         .menu-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100vh;
+            height: 100dvh;
             background: #000;
             z-index: 999;
             transform: translateY(-100%);
             transition: transform 0.8s cubic-bezier(0.85, 0, 0.15, 1);
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            padding-left: 10%;
+            padding: 8% 10%;
             overflow: hidden;
         }
 
         .menu-overlay.active { transform: translateY(0); }
 
         .menu-bg-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    opacity: 0.4; /* keeps it slightly transparent like hover effect */
-    transition: opacity 0.5s ease, background-image 0.4s ease-in-out;
-    z-index: -1;
-
-    /* Default background image */
-    background-image: url('https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&q=80&w=1920');
-}
-
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0; /* Default hidden */
+            transition: opacity 0.5s ease, background-image 0.4s ease-in-out;
+            z-index: -1;
+            background-image: url('https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&q=80&w=1920');
+        }
 
         .menu-overlay.active .menu-bg-image { opacity: 0.4; }
 
         .menu-header-label {
             color: #fff;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             letter-spacing: 0.15em;
             text-transform: uppercase;
-            margin-bottom: 40px;
             font-weight: 700;
+            margin-bottom: auto; /* Pushes content down */
+            padding-top: 20px;
+        }
+
+        .submenu-wrapper {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: auto; /* Pushes footer down */
         }
 
         .submenu-list {
@@ -200,51 +183,30 @@
         .submenu span { font-weight: 300; margin-right: 20px; }
         .submenu:hover { opacity: 0.6; }
 
-        .menu-desc {
-            color: #fff;
-            max-width: 450px;
-            font-size: 14px;
-            line-height: 1.6;
-            margin-top: 50px;
-            opacity: 0.8;
-        }
-
         .artist-info-box {
-            margin-top: 87px;
-            width: 260px;
+            width: 280px;
             background: transparent;
-            padding: 15px 20px;
             font-size: 13px;
             color: #fff;
             font-family: 'Dubai', sans-serif;
+            padding-bottom: 20px;
         }
 
-        .artist-info-box h4 { font-size: 17px; font-weight: 900; color: #fff; }
-        .artist-info-box p { font-size: 13px; font-weight: 700; color: #fff; }
+        .artist-info-box h4 { font-size: 17px; font-weight: 900; }
+        .artist-info-box p { font-size: 13px; font-weight: 700; opacity: 0.8;}
 
-        @media (max-width: 600px) {
-            .artist-info-box { display: none; }
-        }
-
-        .menu-overlay .contact-btn {
-            position: absolute;
-            bottom: 40px;
-            right: 50px;
-            background: #fff;
-            color: #000;
-            padding: 14px 28px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 600;
+        /* --- MENU FOOTER (Fixes mobile overlap) --- */
+        .menu-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding-bottom: 20px;
         }
 
         .social-container {
-            position: absolute;
-            bottom: 52px; 
-            right: 200px; 
             display: flex;
             gap: 25px;
-            z-index: 1001;
         }
 
         .social-container a {
@@ -252,6 +214,7 @@
             font-size: 1.2rem;
             transition: transform 0.3s ease, color 0.3s ease;
             text-decoration: none;
+            padding: 5px; /* Better touch target */
         }
 
         .social-container a:hover {
@@ -259,41 +222,67 @@
             transform: translateY(-3px);
         }
 
-        .bottom-text {
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 3;
-            color: black;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            font-family: 'Dubai', sans-serif;
-            font-weight: 700;
-            font-size: 1.4rem;
+        .contact-btn {
+            background: #fff;
+            color: #000;
+            padding: 14px 28px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: background 0.3s ease;
         }
+        
+        .contact-btn:hover { background: #e0e0e0; }
 
         .swirl-img { pointer-events: none; }
-    </style>
 
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "@id": "https://kendrickartists.com/#organization",
-      "name": "Kendrick Artists",
-      "url": "https://kendrickartists.com/",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://kendrickartists.com/Assects/logo.png",
-        "width": 512,
-        "height": 512
-      },
-      "sameAs": [
-        "https://www.instagram.com/kendrickartists/"
-      ]
-    }
-    </script>
+
+        /* --- RESPONSIVE MEDIA QUERIES --- */
+        @media (max-width: 1024px) {
+            svg text { font-size: 120px; letter-spacing: 4px; }
+            .submenu { font-size: 2.5rem; }
+            .artist-info-box { display: none; } /* Hide info box on tablets to keep it clean */
+            .bottom-text { font-size: 1rem; }
+        }
+
+        @media (max-width: 768px) {
+            .menu-overlay { padding: 8%; }
+            .submenu { font-size: 2rem; }
+            .submenu span { margin-right: 15px; }
+        }
+
+        @media (max-width: 480px) {
+            svg text {
+                font-size: 85px;
+                letter-spacing: 5px;
+                font-weight: 800;
+            }
+
+            .bottom-text { 
+                font-size: 0.85rem; 
+                bottom: 25px; /* Moves it up slightly away from iOS swipe bar */
+            }
+
+            .menu-overlay { padding: 10% 6%; }
+            
+            .submenu { 
+                font-size: 1.8rem; 
+                gap: 5px;
+            }
+            .submenu span { margin-right: 10px; }
+
+            .menu-footer {
+                flex-direction: column-reverse; /* Stacks button above socials */
+                align-items: flex-start;
+                gap: 30px;
+                padding-bottom: 30px;
+            }
+
+            .social-container { gap: 20px; }
+            .nav-trigger.dark { right: 20px; top: max(3vh, 15px); }
+        }
+    </style>
 </head>
 
 <body>
@@ -301,35 +290,39 @@
 
     <div class="menu-overlay" id="menu">
         <div class="menu-bg-image" id="menuBg"></div>
+        
         <div class="menu-header-label">talent</div>
 
-        <div class="submenu-list">
-             <a href="comedy.html" class="submenu" data-bg="https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&q=80&w=1920">
-                <span>&gt;</span> Comedy
-            </a>
-            <a href="Artists.html" class="submenu" data-bg="https://res.cloudinary.com/dgcr7e27r/image/upload/v1769848593/Best-Cameras_bb8kf5.webp">
-                <span>&gt;</span> Personal Appearance
-            </a>
-            <a href="music.html" class="submenu" data-bg="https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&q=80&w=1920">
-                <span>&gt;</span> Music
-            </a>
+        <div class="submenu-wrapper">
+            <div class="submenu-list">
+                 <a href="comedy.html" class="submenu" data-bg="https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&q=80&w=1920">
+                    <span>&gt;</span> Comedy
+                </a>
+                <a href="Artists.html" class="submenu" data-bg="https://res.cloudinary.com/dgcr7e27r/image/upload/v1769848593/Best-Cameras_bb8kf5.webp">
+                    <span>&gt;</span> Personal Appearance
+                </a>
+                <a href="music.html" class="submenu" data-bg="https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&q=80&w=1920">
+                    <span>&gt;</span> Music
+                </a>
+            </div>
+
+            <div class="artist-info-box">
+                <h4>Artist Manager/Agent</h4>
+                <p>(AHR-tist MAN-uh-jer)</p>
+                <p style="margin-top: 8px;">A person responsible for developing a comedian’s long-term strategy, advising on branding and creative choices, managing relationships with venues, agents, and other industry professionals.</p>
+            </div>
         </div>
 
-        <div class="artist-info-box">
-            <h4>Artist Manager/Agent</h4>
-            <p>(AHR-tist MAN-uh-jer)</p>
-            <p style="margin-top: 8px;">A person responsible for developing a comedian’s long-term strategy, advising on branding and creative choices, managing relationships with venues, agents, and other industry professionals.</p>
+        <div class="menu-footer">
+            <div class="social-container">
+                <a href="https://www.instagram.com/kendrickartists/" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+                <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" target="_blank"><i class="fab fa-tiktok"></i></a>
+                <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+            </div>
+            <a href="contact.html" class="contact-btn">Contact</a>
         </div>
-
-        <div class="social-container">
-            <a href="https://www.instagram.com/kendrickartists/" target="_blank"><i class="fab fa-instagram"></i></a>
-            <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
-            <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" target="_blank"><i class="fab fa-tiktok"></i></a>
-            <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
-        </div>
-
-        <a href="contact.html" class="contact-btn">Contact</a>
     </div>
 
     <div class="hero-container">
@@ -342,17 +335,9 @@
                 <defs>
                     <mask id="text-mask">
                         <rect width="100%" height="100%" fill="white"/>
-   <text id="heroText"
-      x="960"
-      y="540"
-      text-anchor="middle"
-      dominant-baseline="middle"
-      fill="black"
-      stroke="black">
-    KENDRICK ARTISTS
-</text>
-
-
+                        <text id="heroText" x="960" y="540" text-anchor="middle" dominant-baseline="middle" fill="black" stroke="black">
+                            KENDRICK ARTISTS
+                        </text>
                     </mask>
                 </defs>
                 
@@ -363,15 +348,11 @@
                   <foreignObject x="0" y="0" width="100%" height="100%">
                     <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%; height:100%;">
                       <video autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover; display:block;">
-                        <source src="https://res.cloudinary.com/dgcr7e27r/video/upload/v1770737386/206895_1_huybxy.mp4" type="video/mp4">
+                        <source src="https://res.cloudinary.com/dgcr7e27r/video/upload/v1771670693/Video_Project_2_kaqqih.mp4" type="video/mp4">
                       </video>
                     </div>
-
-                    <!---swirl--->
-
                   </foreignObject>
                  <image id="swirlImage" href="Assects/swirl.png" class="swirl-img" x="-240" y="-735" width="2400" height="2400" opacity="1" preserveAspectRatio="xMidYMid meet" />
-
                 </g>
             </svg>
         </div>
@@ -404,46 +385,33 @@
             });
         });
 
+        function updateHeroText() {
+            var heroText = document.getElementById("heroText");
+            var swirl = document.getElementById("swirlImage");
 
+            if (window.innerWidth <= 480) {
+                // Tighter spacing for the stacked mobile text
+                heroText.innerHTML =
+                    '<tspan x="960" dy="-30">KENDRICK</tspan>' +            
+                    '<tspan x="960" dy="110">ARTISTS</tspan>';
 
+                swirl.setAttribute("width", "500");
+                swirl.setAttribute("height", "500");
+                swirl.setAttribute("x", "710");
+                swirl.setAttribute("y", "310");
 
-    function updateHeroText() {
+            } else {
+                heroText.innerHTML = "KENDRICK ARTISTS";
 
-    var heroText = document.getElementById("heroText");
-    var swirl = document.getElementById("swirlImage");
+                swirl.setAttribute("width", "2400");
+                swirl.setAttribute("height", "2400");
+                swirl.setAttribute("x", "-240");
+                swirl.setAttribute("y", "-735");
+            }
+        }
 
-    if (window.innerWidth <= 480) {
-                                                                           // line
-        heroText.innerHTML =
-            '<tspan x="960" dy="-40">KENDRICK</tspan>' +            
-            '<tspan x="960" dy="140">ARTISTS</tspan>';
-
-        swirl.setAttribute("width", "500");
-swirl.setAttribute("height", "500");
-
-        swirl.setAttribute("x", "710");
-        swirl.setAttribute("y", "310");
-
-
-
-    } else {
-
-        heroText.innerHTML = "KENDRICK ARTISTS";
-
-        swirl.setAttribute("width", "2400");
-        swirl.setAttribute("height", "2400");
-        swirl.setAttribute("x", "-240");
-        swirl.setAttribute("y", "-735");
-    }
-}
-
-
-
-
-updateHeroText();
-
-window.addEventListener("resize", updateHeroText);
-
+        updateHeroText();
+        window.addEventListener("resize", updateHeroText);
     </script>
 </body>
 </html>

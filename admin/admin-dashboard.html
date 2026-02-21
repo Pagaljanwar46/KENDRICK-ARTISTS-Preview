@@ -180,7 +180,9 @@
 </style>
 
 </head>
+
 <body>
+  
 
   <div class="container">
     <div class="header">
@@ -194,6 +196,8 @@
             <input id="name" placeholder="Artist Name">
             <input id="slug" placeholder="URL Slug (e.g. kendrick-lamar)">
             <input id="category" placeholder="Category (e.g. West Coast)">
+            <input id="order" type="number" placeholder="Display Order (1,2,3...)" min="1">
+
            
            <select id="section">
   <option value="">Select Section</option>
@@ -255,7 +259,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
     import { 
-      getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, getDoc, serverTimestamp 
+      getFirestore, collection, addDoc, query, orderBy, getDocs, deleteDoc, doc, updateDoc, getDoc, serverTimestamp 
     } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -298,7 +302,9 @@
  musicContainer.innerHTML = "<p>Loading...</p>";
 
   try {
-    const snapshot = await getDocs(collection(db, "artists"));
+    const q = query(collection(db, "artists"), orderBy("order", "asc"));
+const snapshot = await getDocs(q);
+
     let artistsArray = [];
 
     snapshot.forEach(docSnap => {
@@ -420,6 +426,8 @@ document.getElementById("sortSelect").addEventListener("change", loadArtists);
       const bio = document.getElementById("bio").value.trim();
       const imageUrl = document.getElementById("imageUrl").value.trim();
       const category = document.getElementById("category").value.trim();
+      const order = Number(document.getElementById("order").value);
+
       const active = document.getElementById("active").checked;
       const section = document.getElementById("section").value;
       const videoUrl = document.getElementById("videoUrl").value.trim();
@@ -449,7 +457,8 @@ const bioAfterImage2 = document.getElementById("bioAfterImage2").value.trim();
       try {
         if (currentEditId) {
           const docRef = doc(db, "artists", currentEditId);
-          await updateDoc(docRef, { name, slug, bio, imageUrl, category, section, active, videoUrl: videoUrl || null, bioAfterVideo: bioAfterVideo || null,
+          await updateDoc(docRef, { name, slug, bio, imageUrl, category, section, active, order: order || 0,
+videoUrl: videoUrl || null, bioAfterVideo: bioAfterVideo || null,
 bioAfterImage1: bioAfterImage1 || null,
 bioAfterImage2: bioAfterImage2 || null, galleryImages: galleryImages.length ? galleryImages : null,
 updatedAt: serverTimestamp() });
@@ -465,6 +474,8 @@ updatedAt: serverTimestamp() });
   category,
   section,
   active,
+  order: order || 0,
+
   videoUrl: videoUrl || null,
   bioAfterVideo: bioAfterVideo || null,
   bioAfterImage1: bioAfterImage1 || null,
@@ -483,6 +494,8 @@ updatedAt: serverTimestamp() });
         document.getElementById("bio").value = "";
         document.getElementById("imageUrl").value = "";
         document.getElementById("category").value = "";
+        document.getElementById("order").value = "";
+
         document.getElementById("active").checked = false;
         document.getElementById("section").value = "";
         document.getElementById("videoUrl").value = "";
@@ -516,6 +529,8 @@ document.getElementById("galleryImage2").value = "";
         document.getElementById("bio").value = artist.bio;
         document.getElementById("imageUrl").value = artist.imageUrl;
         document.getElementById("category").value = artist.category;
+        document.getElementById("order").value = artist.order || "";
+
         document.getElementById("active").checked = artist.active;
         document.getElementById("section").value = artist.section;
         document.getElementById("videoUrl").value = artist.videoUrl || "";
