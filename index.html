@@ -23,6 +23,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Dubai:wght@400;500;700;900&display=swap" rel="stylesheet">
     
     <style>
+        /* --- COLOR OPTIONS --- */
+        :root {
+            --bottom-text-color: #e7e5e5; /* Change this hex code anytime! */
+        }
+
         /* --- RESET & FONTS --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -78,7 +83,7 @@
             left: 50%;
             transform: translateX(-50%);
             z-index: 3;
-            color: black;
+            color: var(--bottom-text-color); /* Uses the CSS variable */
             text-transform: uppercase;
             letter-spacing: 0.08em;
             font-family: 'Dubai', sans-serif;
