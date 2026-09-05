@@ -73,25 +73,13 @@
             width: 100%;
             height: 100%;
             z-index: 2;
-        }
-
-        /* iPhone/iPad fallback: avoid Safari CSS/SVG mask compositing */
-        #iosHeroCanvas {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-            display: none;
-        }
-
-        .ios-canvas-mode .fg-video {
-            opacity: 0;
-        }
-
-        .ios-canvas-mode #iosHeroCanvas {
-            display: block;
+            /* Applies CSS mask to punch the text hole */
+            -webkit-mask-size: cover;
+            -webkit-mask-position: center;
+            -webkit-mask-repeat: no-repeat;
+            mask-size: cover;
+            mask-position: center;
+            mask-repeat: no-repeat;
         }
 
         .fg-video {
@@ -578,7 +566,6 @@
                 <source src="https://res.cloudinary.com/dgcr7e27r/video/upload/v1771670959/Video_Project_2_1_kru9pk.mp4"
                     type="video/mp4">
             </video>
-            <canvas id="iosHeroCanvas" width="1920" height="1080" aria-hidden="true"></canvas>
 
             <svg class="fg-svg-overlays" preserveAspectRatio="xMidYMid slice" viewBox="0 0 1920 1080">
                 <image id="swirlImage" href="Assects/swirl.png" class="swirl-img" x="-240" y="-735" width="2400"
@@ -634,185 +621,89 @@
             }, 500); 
             
         });
-        /* --- HERO TEXT / iOS CANVAS FALLBACK --- */
-        const isIOSDevice =
-            /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-            (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-
-        function positionSwirl() {
-            const swirl = document.getElementById("swirlImage");
-            swirl.style.display = "block";
-
+        /* --- HERO TEXT MASK LOGIC --- */
+        function updateHeroText() {
+            var swirl = document.getElementById("swirlImage");
+            swirl.style.display = "block"; // Ensure it is always visible
+            
+            // Calculate exact centering based on original desktop proportions 
+            // ViewBox Center X: 960 | ViewBox Center Y: 465
             if (window.innerWidth <= 480) {
+                // Mobile Swirl (Width/Height: 800)
                 swirl.setAttribute("width", "800");
                 swirl.setAttribute("height", "800");
-                swirl.setAttribute("x", "560");
-                swirl.setAttribute("y", "125");
+                swirl.setAttribute("x", "560"); // 960 - (800/2)
+                swirl.setAttribute("y", "125"); // Shifted down approximately 1cm visually from previous '65' value
             } else if (window.innerWidth <= 1024) {
+                // Tablet Swirl (Width/Height: 1400)
                 swirl.setAttribute("width", "1400");
                 swirl.setAttribute("height", "1400");
-                swirl.setAttribute("x", "260");
-                swirl.setAttribute("y", "-235");
+                swirl.setAttribute("x", "260");  // 960 - (1400/2)
+                swirl.setAttribute("y", "-235"); // 465 - (1400/2)
             } else {
+                // Desktop Swirl (Width/Height: 2400)
                 swirl.setAttribute("width", "2400");
                 swirl.setAttribute("height", "2400");
-                swirl.setAttribute("x", "-240");
-                swirl.setAttribute("y", "-735");
-            }
-        }
-
-        function updateHeroText() {
-            positionSwirl();
-
-            // iOS uses Canvas instead of CSS/SVG masking.
-            if (isIOSDevice) {
-                initIOSCanvas();
-                return;
+                swirl.setAttribute("x", "-240"); // 960 - (2400/2)
+                swirl.setAttribute("y", "-735"); // 465 - (2400/2)
             }
 
-            let rawSVG = '';
-
+            var rawSVG = '';
+            
             if (window.innerWidth <= 480) {
+                // Mobile Mask
                 rawSVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080">' +
-                    '<defs><mask id="m">' +
+                    '<defs>' +
+                    '<mask id="m">' +
                     '<rect width="100%" height="100%" fill="white"/>' +
                     '<text x="960" y="540" text-anchor="middle" dominant-baseline="middle" font-family="\'Dubai\', \'Segoe UI\', sans-serif" font-weight="900" font-size="85px" letter-spacing="5px" fill="black" stroke="black">' +
                     '<tspan x="960" dy="-30">KENDRICK</tspan>' +
-                    '<tspan x="960" dy="110">ARTISTS</tspan></text>' +
-                    '</mask></defs><rect width="100%" height="100%" fill="white" mask="url(#m)"/></svg>';
+                    '<tspan x="960" dy="110">ARTISTS</tspan>' +
+                    '</text>' +
+                    '</mask>' +
+                    '</defs>' +
+                    '<rect width="100%" height="100%" fill="white" mask="url(#m)"/>' +
+                    '</svg>';
             } else if (window.innerWidth <= 1024) {
+                // Tablet/iPad Mask (Stacked text)
                 rawSVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080">' +
-                    '<defs><mask id="m">' +
+                    '<defs>' +
+                    '<mask id="m">' +
                     '<rect width="100%" height="100%" fill="white"/>' +
                     '<text x="960" y="540" text-anchor="middle" dominant-baseline="middle" font-family="\'Dubai\', \'Segoe UI\', sans-serif" font-weight="900" font-size="130px" letter-spacing="6px" fill="black" stroke="black">' +
                     '<tspan x="960" dy="-50">KENDRICK</tspan>' +
-                    '<tspan x="960" dy="140">ARTISTS</tspan></text>' +
-                    '</mask></defs><rect width="100%" height="100%" fill="white" mask="url(#m)"/></svg>';
+                    '<tspan x="960" dy="140">ARTISTS</tspan>' +
+                    '</text>' +
+                    '</mask>' +
+                    '</defs>' +
+                    '<rect width="100%" height="100%" fill="white" mask="url(#m)"/>' +
+                    '</svg>';
             } else {
+                // Desktop Mask (Single line)
                 rawSVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080">' +
-                    '<defs><mask id="m">' +
+                    '<defs>' +
+                    '<mask id="m">' +
                     '<rect width="100%" height="100%" fill="white"/>' +
                     '<text x="960" y="540" text-anchor="middle" dominant-baseline="middle" font-family="\'Dubai\', \'Segoe UI\', sans-serif" font-weight="900" font-size="190px" letter-spacing="6px" fill="black" stroke="black">KENDRICK ARTISTS</text>' +
-                    '</mask></defs><rect width="100%" height="100%" fill="white" mask="url(#m)"/></svg>';
+                    '</mask>' +
+                    '</defs>' +
+                    '<rect width="100%" height="100%" fill="white" mask="url(#m)"/>' +
+                    '</svg>';
             }
 
-            const encodedSVG = encodeURIComponent(rawSVG)
+            var encodedSVG = encodeURIComponent(rawSVG)
                 .replace(/'/g, "%27")
                 .replace(/"/g, "%22");
 
-            const maskUrl = 'url("data:image/svg+xml;charset=utf-8,' + encodedSVG + '")';
-            const container = document.getElementById("fgContainer");
+            var maskUrl = 'url("data:image/svg+xml;charset=utf-8,' + encodedSVG + '")';
+
+            var container = document.getElementById("fgContainer");
             container.style.webkitMaskImage = maskUrl;
             container.style.maskImage = maskUrl;
         }
 
-        let iosCanvasStarted = false;
-        let iosAnimationId = null;
-
-        function drawSpacedText(ctx, text, centerX, baselineY, fontSize, spacing) {
-            ctx.font = "900 " + fontSize + "px Dubai, 'Segoe UI', sans-serif";
-            ctx.textAlign = "left";
-            ctx.textBaseline = "alphabetic";
-
-            let totalWidth = 0;
-            for (const char of text) totalWidth += ctx.measureText(char).width;
-            totalWidth += spacing * Math.max(0, text.length - 1);
-
-            let x = centerX - totalWidth / 2;
-            for (const char of text) {
-                ctx.fillText(char, x, baselineY);
-                x += ctx.measureText(char).width + spacing;
-            }
-        }
-
-        function drawIOSHeroFrame() {
-            const canvas = document.getElementById("iosHeroCanvas");
-            const video = document.querySelector(".fg-video");
-            if (!canvas || !video || video.readyState < 2) return;
-
-            const ctx = canvas.getContext("2d");
-            const W = 1920, H = 1080;
-
-            ctx.clearRect(0, 0, W, H);
-
-            // Match CSS object-fit: cover for the foreground video.
-            const vw = video.videoWidth || W;
-            const vh = video.videoHeight || H;
-            const scale = Math.max(W / vw, H / vh);
-            const dw = vw * scale;
-            const dh = vh * scale;
-            const dx = (W - dw) / 2;
-            const dy = (H - dh) / 2;
-
-            ctx.globalCompositeOperation = "source-over";
-            ctx.drawImage(video, dx, dy, dw, dh);
-
-            // Punch the exact text-shaped holes out of the foreground.
-            ctx.globalCompositeOperation = "destination-out";
-
-            if (window.innerWidth <= 480) {
-                drawSpacedText(ctx, "KENDRICK", 960, 520, 85, 5);
-                drawSpacedText(ctx, "ARTISTS", 960, 660, 85, 5);
-            } else if (window.innerWidth <= 1024) {
-                drawSpacedText(ctx, "KENDRICK", 960, 515, 130, 6);
-                drawSpacedText(ctx, "ARTISTS", 960, 655, 130, 6);
-            } else {
-                drawSpacedText(ctx, "KENDRICK ARTISTS", 960, 605, 190, 6);
-            }
-
-            ctx.globalCompositeOperation = "source-over";
-        }
-
-        async function initIOSCanvas() {
-            if (!isIOSDevice) return;
-
-            const hero = document.querySelector(".hero-container");
-            const video = document.querySelector(".fg-video");
-            const canvas = document.getElementById("iosHeroCanvas");
-            if (!hero || !video || !canvas) return;
-
-            hero.classList.add("ios-canvas-mode");
-
-            if (iosCanvasStarted) return;
-            iosCanvasStarted = true;
-
-            try {
-                if (document.fonts && document.fonts.load) {
-                    await document.fonts.load("900 85px Dubai");
-                    await document.fonts.ready;
-                }
-            } catch (e) {}
-
-            const start = () => {
-                if (video.paused) video.play().catch(() => {});
-                drawIOSHeroFrame();
-
-                const loop = () => {
-                    drawIOSHeroFrame();
-                    iosAnimationId = requestAnimationFrame(loop);
-                };
-                if (!iosAnimationId) loop();
-            };
-
-            if (video.readyState >= 2) {
-                start();
-            } else {
-                video.addEventListener("loadeddata", start, { once: true });
-                video.addEventListener("canplay", start, { once: true });
-            }
-        }
-
-        positionSwirl();
         updateHeroText();
-        window.addEventListener("resize", () => {
-            positionSwirl();
-            if (isIOSDevice) {
-                // Redraw immediately after an orientation/viewport change.
-                drawIOSHeroFrame();
-            } else {
-                updateHeroText();
-            }
-        });
+        window.addEventListener("resize", updateHeroText);
     </script>
 
     <section style="background:#fff; padding:80px 10%; color:#000;">
