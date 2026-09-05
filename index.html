@@ -74,8 +74,6 @@
             height: 100%;
             z-index: 2;
             /* Applies CSS mask to punch the text hole */
-            -webkit-mask-image: url(#heroTextMask);
-            mask-image: url(#heroTextMask);
             -webkit-mask-size: cover;
             -webkit-mask-position: center;
             -webkit-mask-repeat: no-repeat;
@@ -500,19 +498,7 @@
 
 <body>
 
-    <!-- IN-DOM SVG MASK FOR WEBKIT / MOBILE SAFARI FONT INHERITANCE & RETINA VECTOR CRISPNESS -->
-    <svg id="svgMaskContainer" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" style="position: absolute; width: 0; height: 0; overflow: hidden; pointer-events: none;" aria-hidden="true">
-        <defs>
-            <mask id="heroTextMask" maskUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080">
-                <rect width="100%" height="100%" fill="white"/>
-                <g id="heroMaskTextGroup">
-                    <!-- Text elements updated dynamically by updateHeroText() -->
-                </g>
-            </mask>
-        </defs>
-    </svg>
-
-    <div id="preloader">
+  <div id="preloader">
         <div class="preloader-content">
             <svg class="drawing-text" viewBox="0 0 1000 150">
                 <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle">KENDRICK ARTISTS</text>
@@ -662,60 +648,47 @@
                 swirl.setAttribute("y", "-735"); // 465 - (2400/2)
             }
 
-            var maskTextGroup = document.getElementById("heroMaskTextGroup");
-            var innerTextSVG = '';
             var rawSVG = '';
-
+            
             if (window.innerWidth <= 480) {
-                // Mobile Mask (Clean Dubai text, no thick stroke distortion)
-                innerTextSVG = '<text x="960" y="540" text-anchor="middle" dominant-baseline="middle" font-family="\'Dubai\', \'Helvetica Neue\', sans-serif" font-weight="900" font-size="95px" letter-spacing="4px" fill="black">' +
-                    '<tspan x="960" dy="-40">KENDRICK</tspan>' +
-                    '<tspan x="960" dy="110">ARTISTS</tspan>' +
-                    '</text>';
-
+                // Mobile Mask
                 rawSVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080">' +
                     '<defs>' +
                     '<mask id="m">' +
                     '<rect width="100%" height="100%" fill="white"/>' +
-                    innerTextSVG +
+                    '<text x="960" y="540" text-anchor="middle" dominant-baseline="middle" font-family="\'Dubai\', \'Segoe UI\', sans-serif" font-weight="900" font-size="85px" letter-spacing="5px" fill="black" stroke="black">' +
+                    '<tspan x="960" dy="-30">KENDRICK</tspan>' +
+                    '<tspan x="960" dy="110">ARTISTS</tspan>' +
+                    '</text>' +
                     '</mask>' +
                     '</defs>' +
                     '<rect width="100%" height="100%" fill="white" mask="url(#m)"/>' +
                     '</svg>';
             } else if (window.innerWidth <= 1024) {
                 // Tablet/iPad Mask (Stacked text)
-                innerTextSVG = '<text x="960" y="540" text-anchor="middle" dominant-baseline="middle" font-family="\'Dubai\', \'Helvetica Neue\', sans-serif" font-weight="900" font-size="130px" letter-spacing="6px" fill="black">' +
-                    '<tspan x="960" dy="-50">KENDRICK</tspan>' +
-                    '<tspan x="960" dy="140">ARTISTS</tspan>' +
-                    '</text>';
-
                 rawSVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080">' +
                     '<defs>' +
                     '<mask id="m">' +
                     '<rect width="100%" height="100%" fill="white"/>' +
-                    innerTextSVG +
+                    '<text x="960" y="540" text-anchor="middle" dominant-baseline="middle" font-family="\'Dubai\', \'Segoe UI\', sans-serif" font-weight="900" font-size="130px" letter-spacing="6px" fill="black" stroke="black">' +
+                    '<tspan x="960" dy="-50">KENDRICK</tspan>' +
+                    '<tspan x="960" dy="140">ARTISTS</tspan>' +
+                    '</text>' +
                     '</mask>' +
                     '</defs>' +
                     '<rect width="100%" height="100%" fill="white" mask="url(#m)"/>' +
                     '</svg>';
             } else {
                 // Desktop Mask (Single line)
-                innerTextSVG = '<text x="960" y="540" text-anchor="middle" dominant-baseline="middle" font-family="\'Dubai\', \'Helvetica Neue\', sans-serif" font-weight="900" font-size="190px" letter-spacing="6px" fill="black">KENDRICK ARTISTS</text>';
-
                 rawSVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080">' +
                     '<defs>' +
                     '<mask id="m">' +
                     '<rect width="100%" height="100%" fill="white"/>' +
-                    innerTextSVG +
+                    '<text x="960" y="540" text-anchor="middle" dominant-baseline="middle" font-family="\'Dubai\', \'Segoe UI\', sans-serif" font-weight="900" font-size="190px" letter-spacing="6px" fill="black" stroke="black">KENDRICK ARTISTS</text>' +
                     '</mask>' +
                     '</defs>' +
                     '<rect width="100%" height="100%" fill="white" mask="url(#m)"/>' +
                     '</svg>';
-            }
-
-            // Update in-DOM SVG mask (enables WebKit / Mobile Safari web font inheritance & crisp Retina rendering)
-            if (maskTextGroup) {
-                maskTextGroup.innerHTML = innerTextSVG;
             }
 
             var encodedSVG = encodeURIComponent(rawSVG)
@@ -725,15 +698,12 @@
             var maskUrl = 'url("data:image/svg+xml;charset=utf-8,' + encodedSVG + '")';
 
             var container = document.getElementById("fgContainer");
-            container.style.webkitMaskImage = 'url(#heroTextMask), ' + maskUrl;
-            container.style.maskImage = 'url(#heroTextMask), ' + maskUrl;
+            container.style.webkitMaskImage = maskUrl;
+            container.style.maskImage = maskUrl;
         }
 
         updateHeroText();
         window.addEventListener("resize", updateHeroText);
-        if (document.fonts) {
-            document.fonts.ready.then(updateHeroText);
-        }
     </script>
 
     <section style="background:#fff; padding:80px 10%; color:#000;">
