@@ -624,6 +624,62 @@
         /* --- HERO TEXT MASK LOGIC --- */
         function updateHeroText() {
             var swirl = document.getElementById("swirlImage");
+            var container = document.getElementById("fgContainer");
+            var isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+                (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+            swirl.style.display = "block";
+
+            if (isIOSDevice) {
+                // iOS Safari: do not invoke the SVG data-URI CSS mask.
+                container.style.webkitMaskImage = "none";
+                container.style.maskImage = "none";
+
+                // Preserve the existing swirl sizing/positioning.
+                if (window.innerWidth <= 480) {
+                    swirl.setAttribute("width", "800");
+                    swirl.setAttribute("height", "800");
+                    swirl.setAttribute("x", "560");
+                    swirl.setAttribute("y", "125");
+                } else if (window.innerWidth <= 1024) {
+                    swirl.setAttribute("width", "1400");
+                    swirl.setAttribute("height", "1400");
+                    swirl.setAttribute("x", "260");
+                    swirl.setAttribute("y", "-235");
+                } else {
+                    swirl.setAttribute("width", "2400");
+                    swirl.setAttribute("height", "2400");
+                    swirl.setAttribute("x", "-240");
+                    swirl.setAttribute("y", "-735");
+                }
+
+                // Normal HTML text replaces only the visual mask text on iOS.
+                var title = document.getElementById("iosHeroTitle");
+                if (!title) {
+                    title = document.createElement("div");
+                    title.id = "iosHeroTitle";
+                    title.setAttribute("aria-hidden", "true");
+                    Object.assign(title.style, {
+                        position: "absolute", inset: "0", zIndex: "3",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        pointerEvents: "none", fontFamily: "'Dubai','Segoe UI',sans-serif",
+                        fontWeight: "900", color: "#000", textAlign: "center",
+                        lineHeight: "0.9", letterSpacing: "5px", padding: "20px"
+                    });
+                    container.appendChild(title);
+                }
+                if (window.innerWidth <= 480 || window.innerWidth <= 1024) {
+                    title.innerHTML = "KENDRICK<br>ARTISTS";
+                    title.style.fontSize = window.innerWidth <= 480 ? "85px" : "130px";
+                } else {
+                    title.textContent = "KENDRICK ARTISTS";
+                    title.style.fontSize = "190px";
+                }
+                return;
+            }
+
+
+            var swirl = document.getElementById("swirlImage");
             swirl.style.display = "block"; // Ensure it is always visible
             
             // Calculate exact centering based on original desktop proportions 
