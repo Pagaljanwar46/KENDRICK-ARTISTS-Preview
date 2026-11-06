@@ -37,11 +37,30 @@
             box-sizing: border-box;
         }
 
+        /* Lock scrolling on BOTH html and body (iOS Safari ignores body-only locks) */
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+            overscroll-behavior: none;
+        }
+
         body {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             background-color: #000;
+        }
+
+        /* --- SEO CONTENT (visually hidden on all devices, still readable by crawlers & screen readers) --- */
+        .seo-content {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            margin: -1px;
+            padding: 0;
             overflow: hidden;
-            /* Prevents scroll bounce on mobile */
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
         }
 
         /* --- HERO SECTION --- */
@@ -53,6 +72,25 @@
             height: 100dvh;
             overflow: hidden;
             background-color: #fff;
+        }
+
+        .ios-hero-static {
+            display: none;
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 10;
+        }
+
+        .ios-static-mode .ios-hero-static {
+            display: block;
+        }
+
+        .ios-static-mode .bg-video,
+        .ios-static-mode .mask-layer {
+            display: none !important;
         }
 
         .bg-video {
@@ -418,21 +456,24 @@
             animation: textDraw 2.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
 
-      @keyframes textDraw {
+        @keyframes textDraw {
             0% {
                 stroke-dashoffset: 500;
                 fill: transparent;
             }
+
             100% {
                 stroke-dashoffset: 0;
-                fill: transparent; /* Keeps it as a sleek outline, no solid pop! */
+                fill: transparent;
+                /* Keeps it as a sleek outline, no solid pop! */
             }
         }
-        
+
 
         /* Centered Progress Bar to match video */
         .loader-bottom-wrapper {
-            width: 150px; /* Narrow width like the video */
+            width: 150px;
+            /* Narrow width like the video */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -498,7 +539,7 @@
 
 <body>
 
-  <div id="preloader">
+    <div id="preloader">
         <div class="preloader-content">
             <svg class="drawing-text" viewBox="0 0 1000 150">
                 <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle">KENDRICK ARTISTS</text>
@@ -556,6 +597,7 @@
     </div>
 
     <div class="hero-container">
+        <img class="ios-hero-static" src="Assects/hero-ios-static.jpg" alt="Kendrick Artists" aria-hidden="true">
         <video class="bg-video" autoplay muted loop playsinline>
             <source src="https://res.cloudinary.com/dgcr7e27r/video/upload/v1769517514/Video_Project_1_1_lduqak.mp4"
                 type="video/mp4">
@@ -576,8 +618,8 @@
         <div class="bottom-text">AN ENTERTAINMENT COMPANY</div>
     </div>
 
-    
-        <script>
+
+    <script>
         function toggleMenu() {
             const menu = document.getElementById('menu');
             const trigger = document.querySelector('.nav-trigger');
@@ -602,7 +644,7 @@
             });
         });
 
-       /* --- PRELOADER LOGIC --- */
+        /* --- PRELOADER LOGIC --- */
         const pageLoaded = new Promise(resolve => {
             if (document.readyState === 'complete') {
                 resolve();
@@ -614,74 +656,29 @@
         /* --- PRELOADER LOGIC --- */
         // Listen for the exact moment the entire page (and video) finishes loading
         window.addEventListener('load', () => {
-            
+
             // Add a tiny half-second delay just so it doesn't violently flash on super fast connections, then fade out
             setTimeout(() => {
                 document.getElementById('preloader').classList.add('loaded');
-            }, 500); 
-            
+            }, 500);
+
         });
         /* --- HERO TEXT MASK LOGIC --- */
         function updateHeroText() {
-            var swirl = document.getElementById("swirlImage");
-            var container = document.getElementById("fgContainer");
-            var isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-                (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-
-            swirl.style.display = "block";
+            const isIOSDevice =
+                /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
             if (isIOSDevice) {
-                // iOS Safari: do not invoke the SVG data-URI CSS mask.
-                container.style.webkitMaskImage = "none";
-                container.style.maskImage = "none";
-
-                // Preserve the existing swirl sizing/positioning.
-                if (window.innerWidth <= 480) {
-                    swirl.setAttribute("width", "800");
-                    swirl.setAttribute("height", "800");
-                    swirl.setAttribute("x", "560");
-                    swirl.setAttribute("y", "125");
-                } else if (window.innerWidth <= 1024) {
-                    swirl.setAttribute("width", "1400");
-                    swirl.setAttribute("height", "1400");
-                    swirl.setAttribute("x", "260");
-                    swirl.setAttribute("y", "-235");
-                } else {
-                    swirl.setAttribute("width", "2400");
-                    swirl.setAttribute("height", "2400");
-                    swirl.setAttribute("x", "-240");
-                    swirl.setAttribute("y", "-735");
-                }
-
-                // Normal HTML text replaces only the visual mask text on iOS.
-                var title = document.getElementById("iosHeroTitle");
-                if (!title) {
-                    title = document.createElement("div");
-                    title.id = "iosHeroTitle";
-                    title.setAttribute("aria-hidden", "true");
-                    Object.assign(title.style, {
-                        position: "absolute", inset: "0", zIndex: "3",
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                        pointerEvents: "none", fontFamily: "'Dubai','Segoe UI',sans-serif",
-                        fontWeight: "900", color: "#000", textAlign: "center",
-                        lineHeight: "0.9", letterSpacing: "5px", padding: "20px"
-                    });
-                    container.appendChild(title);
-                }
-                if (window.innerWidth <= 480 || window.innerWidth <= 1024) {
-                    title.innerHTML = "KENDRICK<br>ARTISTS";
-                    title.style.fontSize = window.innerWidth <= 480 ? "85px" : "130px";
-                } else {
-                    title.textContent = "KENDRICK ARTISTS";
-                    title.style.fontSize = "190px";
-                }
+                document.body.classList.add('ios-static-mode');
                 return;
             }
 
+            document.body.classList.remove('ios-static-mode');
 
             var swirl = document.getElementById("swirlImage");
             swirl.style.display = "block"; // Ensure it is always visible
-            
+
             // Calculate exact centering based on original desktop proportions 
             // ViewBox Center X: 960 | ViewBox Center Y: 465
             if (window.innerWidth <= 480) {
@@ -705,7 +702,7 @@
             }
 
             var rawSVG = '';
-            
+
             if (window.innerWidth <= 480) {
                 // Mobile Mask
                 rawSVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080">' +
@@ -762,7 +759,7 @@
         window.addEventListener("resize", updateHeroText);
     </script>
 
-    <section style="background:#fff; padding:80px 10%; color:#000;">
+    <section class="seo-content">
         <h2>Kendrick Artists – Entertainment & Talent Management</h2>
         <p>
             Kendrick Artists is a full-service talent and entertainment management company
